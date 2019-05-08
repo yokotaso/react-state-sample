@@ -7,18 +7,26 @@ import {Provider, Subscribe, Container} from 'unstated';
 
 interface State {
     numOfClicks: number;
+    toggle: string;
 };
 
 class AppContainer extends Container<State> {
     state = {
-        numOfClicks: 0
+        numOfClicks: 0,
+        toggle: "expand",
     };
 
     increment() {
-        console.log(this.state.numOfClicks);
         const numOfClicks = this.state.numOfClicks + 1;
         this.setState({numOfClicks});
     }
+
+    toggleFieldGroup() {
+        const isExpand = this.state.toggle === "expand";
+        const toggle = isExpand ? "collapse" : "expand";
+        this.setState({toggle});
+    }
+
 }
 
 const items = [{
@@ -31,7 +39,10 @@ function App() {
         <Subscribe to={[AppContainer]}>
             {(container: AppContainer) => (
                 <div>
-                <FieldGroup toggle="expand">
+                <FieldGroup 
+                    toggle={container.state.toggle}
+                    onToggle={() => container.toggleFieldGroup()}
+                >
                     <Button 
                         text="Click ME" 
                         type="submit"
